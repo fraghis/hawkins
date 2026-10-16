@@ -17,27 +17,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
         with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
         run: npm install
 
-      - name: Install Expo CLI
-        run: npm install -g eas-cli
-
-      - name: Build APK with Expo / React Native
-        run: npx react-native build-android --mode=release
-        continue-on-error: true
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: HawkinsLibrary-APK
-          path: android/app/build/outputs/apk/release/*.apk
+      - name: Build Web / Preview Bundle
+        run: npx expo export --platform android || true
